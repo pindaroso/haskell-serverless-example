@@ -165,7 +165,7 @@ The provided `main.hs` simply output its input to its output. There should be an
 
 ## References
 
-* [Original inspiration](https://github.com/abailly/aws-lambda-haskell).
+* [Original inspiration](https://github.com/abailly/aws-lambda-haskell)
 * [Running executables in AWS Lambda](http://aws.amazon.com/fr/blogs/compute/running-executables-in-aws-lambda/)
 * [Child processes in node](https://nodejs.org/api/child_process.html)
 * [AWS Lambda documentation](http://docs.aws.amazon.com/lambda/latest/dg/nodejs-create-deployment-pkg.html)
