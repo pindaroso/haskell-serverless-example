@@ -4,4 +4,4 @@ INFRA=code_infrastructure_1
 
 vagrant ssh -c "docker exec -it $INFRA stack --allow-different-user setup"
 vagrant ssh -c "docker exec -it $INFRA stack --allow-different-user build"
-#vagrant ssh -c "docker exec -it $INFRA ./build.sh"
+vagrant ssh -c "docker exec -it $INFRA ./build-lambda.sh"
