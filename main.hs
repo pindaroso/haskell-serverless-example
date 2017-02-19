@@ -1,9 +1,10 @@
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE RecordWildCards  #-}
+
 module Main where
 
-import           AWS.ApiGateway
-import           AWS.Lambda
+import           Aws.ApiGateway
+import           Aws.Lambda
 import           Control.Lens
 import           Control.Monad           (forM)
 import           Control.Monad.Trans.AWS
@@ -19,15 +20,13 @@ import           System.IO
 import           System.IO.Extra
 import           System.Process
 
-
 main :: IO ()
 main = options >>= go
 
 initAWS :: IO Env
 initAWS = do
   lgr <- newLogger Trace stdout
-  awsEnv <- newEnv Ireland Discover <&> envLogger .~ lgr
-  return awsEnv
+  newEnv Ireland Discover <&> envLogger .~ lgr
 
 go :: MainConfig -> IO ()
 go CreateApi{..} = initAWS >>= \ awsEnv -> runResourceT (runAWST awsEnv $ createApi createApiEndpoint lambdaTargetName) >>= print
@@ -99,6 +98,3 @@ standardLibs =  [ "linux-vdso.so.1"
                 , "libc.so.6"
                 , "/lib64/ld-linux-x86-64.so.2"
                 ]
-
-
-
