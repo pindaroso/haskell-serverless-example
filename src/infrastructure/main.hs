@@ -70,17 +70,18 @@ setMainTo exe s |  "$$main$$" `isPrefixOf` s = exe ++ setMainTo exe (drop 8 s)
 extractLibs :: ImageName -> String -> IO [ FilePath ]
 extractLibs (ImageName imgName) targetName = do
   cid <- readFile ".cidfile"
-  stackRoot <- filter (/= '\n') <$> readProcess "docker" [ "run"
-                                                         , "--rm"
-                                                         , "--volumes-from=" ++ cid
-                                                         , "-w"
-                                                         , "/build"
-                                                         , imgName
-                                                         , "stack"
-                                                         , "path"
-                                                         , "--allow-different-user"
-                                                         , "--local-install-root"
-                                                         ] ""
+  let stackRoot = "/home/vagrant/code/app"
+  -- stackRoot <- filter (/= '\n') <$> readProcess "docker" [ "run"
+  --                                                        , "--rm"
+  --                                                        , "--volumes-from=" ++ cid
+  --                                                        , "-w"
+  --                                                        , "/build"
+  --                                                        , imgName
+  --                                                        , "stack"
+  --                                                        , "path"
+  --                                                        , "--allow-different-user"
+  --                                                        , "--local-install-root"
+  --                                                        ] ""
   libs <- getUnknownLibs <$> readProcess "docker" [ "run"
                                                   , "--rm"
                                                   , "--volumes-from=" ++ cid
