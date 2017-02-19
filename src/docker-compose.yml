@@ -5,8 +5,10 @@ services:
         build: ./app
         volumes:
             - ./app:/opt/app
+        network_mode: "host"
 
     infrastructure:
         build: ./infrastructure
         volumes:
             - ./infrastructure:/opt/infrastructure
+        network_mode: "host"

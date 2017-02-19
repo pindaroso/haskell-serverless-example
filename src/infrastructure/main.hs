@@ -45,7 +45,7 @@ go BuildLambda{..} = do
       buildDocker = callProcess "docker" [ "build"
                                          , "-t"
                                          , "ghc-centos:lapack"
-                                         , "."
+                                         , "/home/vagrant/code/app"
                                          ]
 
       packLambda :: FilePath -> [FilePath] -> IO ()
@@ -74,10 +74,10 @@ extractLibs (ImageName imgName) targetName = do
                                                          , "--rm"
                                                          , "--volumes-from=" ++ cid
                                                          , "-w"
-                                                         ,"/build"
-                                                         ,imgName
-                                                         ,"stack"
-                                                         ,"path"
+                                                         , "/build"
+                                                         , imgName
+                                                         , "stack"
+                                                         , "path"
                                                          , "--allow-different-user"
                                                          , "--local-install-root"
                                                          ] ""
@@ -108,12 +108,14 @@ extractLibs (ImageName imgName) targetName = do
 -- | Extract list of non-standard libs to be packaged with executable
 --
 -- expect input string to be the result of executing `ldd` on some executable
-getUnknownLibs :: String -> [ FilePath ]
+getUnknownLibs :: String -> [ FilePath
+                            ]
 getUnknownLibs lddOutput = let mappings = map words $ lines lddOutput
                            in map (!! 2) $ filter (not . (`elem` standardLibs) . head ) mappings
 
 -- | List of standard libraries packaged in CentOS image
-standardLibs :: [ String ]
+standardLibs :: [ String
+                ]
 standardLibs =  [ "linux-vdso.so.1"
                 , "librt.so.1"
                 , "libutil.so.1"
