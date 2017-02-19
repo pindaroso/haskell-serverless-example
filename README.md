@@ -24,9 +24,7 @@ vagrant up
 * Managing AWS Lambda functions and packages
 * Managing AWS Api Gateway endpoints to expose Lambda functions
 
-Interaction with AWS is done through the excellent [amazonka](https://github.com/brendanhay/amazonka) package.
-
-To build CLI program and AWS Lambda package:
+Interaction with AWS is done through the excellent [amazonka](https://github.com/brendanhay/amazonka) package. To build CLI program and AWS Lambda package:
 
 ```bash
 ./bin/build
@@ -52,7 +50,7 @@ Archive:  lambda.zip
 Deploying an existing `lambda.zip` file to AWS:
 
 ```
-$ ./main lambda deploy --function-name foo
+./main lambda deploy --function-name foo
 ```
 
 This creates function `foo` that can be invoked manually (see below).
@@ -60,14 +58,14 @@ This creates function `foo` that can be invoked manually (see below).
 Deleting an API Gateway endpoint:
 
 ```
-$ ./main api delete --endpoint fooAPI
+./main api delete --endpoint fooAPI
 ```
 
 Note that AWS has a rate limit on API deletions.
 
 ### TODO
 
-* Creating an API Gateway endpoint and linking it to Lambda function: The configuration and part of the code are ready but the process is a little bit involved hence requires more interaction with AWS
+* Create an API Gateway endpoint and linking it to Lambda function. The configuration and part of the code are ready but the process is a little bit involved hence requires more interaction with AWS.
 
 ## Manual Setup
 
