@@ -15,4 +15,5 @@ extra-deps:
   - amazonka-1.4.3
   - amazonka-apigateway-1.4.3
   - amazonka-lambda-1.4.3
+  - hmatrix-nipals-0.2
   - tokenize-0.3.0
