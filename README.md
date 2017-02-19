@@ -13,7 +13,7 @@ vagrant up
 ./bin/make
 ```
 
-*Explanation*
+*Install*
 
 `main.hs` aims at automating the deployment of Haskell code packages to AWS Lambda by:
 
