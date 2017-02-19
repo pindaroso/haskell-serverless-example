@@ -13,7 +13,7 @@ vagrant up
 ./bin/make
 ```
 
-## Install
+### Install
 
 *Infrastructure*
 
@@ -67,7 +67,7 @@ Note that AWS has a rate limit on API deletions.
 
 * Creating an API Gateway endpoint and linking it to Lambda function: The configuration and part of the code are ready but the process is a little bit involved hence requires more interaction with AWS
 
-## Howto - The Manual Way
+## Manual Setup
 
 ### Prepare environment
 
