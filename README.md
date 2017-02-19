@@ -1,10 +1,10 @@
 # haskell-serverless-example
 
-**Haskell serverless example using AWS and AWS Lambda**
+**Haskell serverless example using AWS API Gateway and Lambda**
 
 ## Setup
 
-*Requirements*
+### Requirements
 
 * Docker or Vagrant
 
@@ -13,7 +13,9 @@ vagrant up
 ./bin/make
 ```
 
-*Install*
+## Install
+
+*Infrastructure*
 
 `main.hs` aims at automating the deployment of Haskell code packages to AWS Lambda by:
 
@@ -160,12 +162,6 @@ A lot of interesting pieces of code rely on external C libraries. For example, [
     ```
 
 The provided `main.hs` simply output its input to its output. There should be an execution trace in the logs hosted on CloudWatch.
-
-## Manifest
-
-* `run-tmpl.js`: Template Javascript wrapper to run binary in a child process. The `$$main$$` string should be replaced by the name of the packed executable,
-* `test.js`: Javascript test wrapper, invoke the handler simulating what AWS Lambda does
-* `stack.yaml`, `main.cabal`, `main.hs`: Basic structure for building Haskell code
 
 ## References
 
