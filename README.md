@@ -75,7 +75,7 @@ Note that AWS has a rate limit on API deletions.
     * use `aws configure` to define credentials and region to deploy to
     * create or use role for executing code on AWS Lambda, e.g. something like `arn:aws:iam::259394719635:role/lambda`
 
-## Simple Build ##
+### Simple Build
 
 * Build docker container for building Haskell code that is supposed to be runnable on Amazon's Linux AMI
 
@@ -100,7 +100,7 @@ Note that AWS has a rate limit on API deletions.
   zip lambda.zip run.js main
   ```
 
-## Complex Build
+### Complex Build
 
 A lot of interesting pieces of code rely on external C libraries. For example, [hmatrix](https://github.com/albertoruiz/hmatrix) relies on LAPACK and BLAS libraries for efficient matrix operations and compiled executable will need to be dynamically (or statically) linked to those libraries for proper execution. The above directions should be updated to take into account those extraneous libraries:
 
@@ -128,7 +128,7 @@ A lot of interesting pieces of code rely on external C libraries. For example, [
    ```
 * Pack everything into `lambda.zip`: Javascript wrapper, libraries, executable...
 
-## Deploy to AWS Lambda
+### Deploy to AWS Lambda
 
 * Create function on Lambda:
 
