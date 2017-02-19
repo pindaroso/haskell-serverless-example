@@ -29,10 +29,10 @@ initAWS = do
   newEnv Ireland Discover <&> envLogger .~ lgr
 
 go :: MainConfig -> IO ()
-go CreateApi{..} = initAWS >>= \ awsEnv -> runResourceT (runAWST awsEnv $ createApi createApiEndpoint lambdaTargetName) >>= print
+go CreateApi{..} = initAWS >>= \ awsEnv -> runResourceT
+       (runAWST awsEnv $ createApi createApiEndpoint lambdaTargetName) >>= print
 go DeleteApi{..} = initAWS >>= \ awsEnv -> runResourceT (runAWST awsEnv $ deleteApi deleteApiEndpoint)
 go BuildLambda{..} = do
-  -- build docker container
   buildDocker
   -- build executable with docker
   exe <- stackInDocker (ImageName "ghc-centos:lapack") (unpack lambdaSrcDirectory) (unpack lambdaTargetName)
@@ -42,7 +42,11 @@ go BuildLambda{..} = do
   packLambda exe (exe:libs)
     where
       buildDocker :: IO ()
-      buildDocker = callProcess "docker" ["build", "-t", "ghc-centos:lapack","ghc-centos" ]
+      buildDocker = callProcess "docker" [ "build"
+                                         , "-t"
+                                         , "ghc-centos:lapack"
+                                         , "."
+                                         ]
 
       packLambda :: FilePath -> [FilePath] -> IO ()
       packLambda exe files = do
@@ -54,7 +58,8 @@ go DeployLambda{..} = do
   awsEnv <- initAWS
   createOrUpdateFunction awsEnv lambdaTargetName "lambda.zip" >>= print
     where
-      createOrUpdateFunction awsEnv target zipFile = runResourceT (runAWST awsEnv $ createFunctionWithZip target zipFile)
+      createOrUpdateFunction awsEnv target zipFile =
+          runResourceT (runAWST awsEnv $ createFunctionWithZip target zipFile)
 
 setMainTo :: FilePath -> String -> String
 setMainTo _   []                             = []
@@ -65,13 +70,36 @@ setMainTo exe s |  "$$main$$" `isPrefixOf` s = exe ++ setMainTo exe (drop 8 s)
 extractLibs :: ImageName -> String -> IO [ FilePath ]
 extractLibs (ImageName imgName) targetName = do
   cid <- readFile ".cidfile"
-  stackRoot <- filter (/= '\n') <$> readProcess "docker" [ "run", "--rm", "--volumes-from=" ++ cid,  "-w", "/build", imgName, "stack", "path",  "--allow-different-user", "--local-install-root" ] ""
-  libs          <- getUnknownLibs <$> readProcess "docker" ["run", "--rm", "--volumes-from=" ++ cid, imgName, "ldd", stackRoot ++ "/bin/" ++ targetName ] ""
+  stackRoot <- filter (/= '\n') <$> readProcess "docker" [ "run"
+                                                         , "--rm"
+                                                         , "--volumes-from=" ++ cid
+                                                         , "-w"
+                                                         ,"/build"
+                                                         ,imgName
+                                                         ,"stack"
+                                                         ,"path"
+                                                         , "--allow-different-user"
+                                                         , "--local-install-root"
+                                                         ] ""
+  libs <- getUnknownLibs <$> readProcess "docker" [ "run"
+                                                  , "--rm"
+                                                  , "--volumes-from=" ++ cid
+                                                  , imgName
+                                                  , "ldd"
+                                                  , stackRoot ++ "/bin/" ++ targetName
+                                                  ] ""
   forM libs (extractLib cid)
     where
       extractLib cid lib = do
         let targetLib = takeFileName lib
-        (_, Just hout, _, phdl) <- createProcess $ (proc "docker" ["run", "--rm", "--volumes-from=" ++ cid, imgName, "sh", "-c", "dd if=$(readlink -f " ++ lib ++ ")" ]) { std_out = CreatePipe }
+        (_, Just hout, _, phdl) <- createProcess $ (proc "docker" [ "run"
+                                                                  , "--rm"
+                                                                  , "--volumes-from=" ++ cid
+                                                                  , imgName
+                                                                  , "sh"
+                                                                  , "-c"
+                                                                  , "dd if=$(readlink -f " ++ lib ++ ")"
+                                                                  ]) { std_out = CreatePipe }
         withBinaryFile targetLib WriteMode $ \ hDst -> copy hout hDst
         void $ waitForProcess phdl
         return targetLib

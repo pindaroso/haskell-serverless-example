@@ -1,5 +1,1 @@
-*~
-*.o
-*.hi
-.stack-work/
-\#*
+.vagrant

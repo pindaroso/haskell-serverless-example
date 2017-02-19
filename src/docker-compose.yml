@@ -1,0 +1,12 @@
+version: "2"
+
+services:
+    app:
+        build: ./app
+        volumes:
+            - ./app:/opt/app
+
+    infrastructure:
+        build: ./infrastructure
+        volumes:
+            - ./infrastructure:/opt/infrastructure

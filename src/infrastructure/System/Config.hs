@@ -1,9 +1,11 @@
-module System.Config(MainConfig(..), options) where
+module System.Config ( MainConfig(..)
+                     , options
+                     ) where
 
 import           Data.Text
 import           Options.Applicative
 
-data MainConfig = DeleteApi { deleteApiEndpoint :: Text}
+data MainConfig = DeleteApi { deleteApiEndpoint :: Text }
                 | CreateApi { createApiEndpoint :: Text
                             , lambdaTargetName  :: Text
                             }
@@ -79,4 +81,3 @@ options = execParser opts
       ( fullDesc
         <> progDesc "Manage AWS Lambda functions"
         <> header "Haskell + Lambda" )
-

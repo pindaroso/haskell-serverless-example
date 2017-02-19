@@ -4,6 +4,17 @@
 
 ## Setup
 
+*Requirements*
+
+* Docker or Vagrant
+
+```
+vagrant up
+./bin/make
+```
+
+*Explanation*
+
 `main.hs` aims at automating the deployment of Haskell code packages to AWS Lambda by:
 
 * Managing AWS Lambda functions and packages
@@ -13,14 +24,14 @@ Interaction with AWS is done through the excellent [amazonka](https://github.com
 
 To build CLI program:
 
-```
-$ stack build
+```bash
+./bin/build
 ```
 
 Creating an AWS Lambda package requires [docker](http://docker.io):
 
-```main
-$ ./main lambda build --build-target foo --source-directory foo/
+```bash
+./bin/build
 ```
 
 This generates a `lambda.zip` file in the current directory that contains something like:
