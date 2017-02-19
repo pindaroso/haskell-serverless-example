@@ -22,13 +22,7 @@ vagrant up
 
 Interaction with AWS is done through the excellent [amazonka](https://github.com/brendanhay/amazonka) package.
 
-To build CLI program:
-
-```bash
-./bin/build
-```
-
-Creating an AWS Lambda package requires [docker](http://docker.io):
+To build CLI program and AWS Lambda package:
 
 ```bash
 ./bin/build
