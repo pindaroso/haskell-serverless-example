@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/stilesb/haskell-serverless-example.svg?branch=master)](https://travis-ci.org/stilesb/haskell-serverless-example)
+
 # haskell-serverless-example
 
 **Haskell serverless example using AWS API Gateway and Lambda**
