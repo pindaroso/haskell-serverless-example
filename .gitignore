@@ -1,3 +1,4 @@
 .vagrant
 tags
 .DS_Store
+src/app/src/.stack-work
