@@ -70,7 +70,7 @@ setMainTo exe s |  "$$main$$" `isPrefixOf` s = exe ++ setMainTo exe (drop 8 s)
 extractLibs :: ImageName -> String -> IO [ FilePath ]
 extractLibs (ImageName imgName) targetName = do
   cid <- readFile ".cidfile"
-  let stackRoot = "/home/vagrant/code/app"
+  let stackRoot = "/home/vagrant/code/app/src"
   -- stackRoot <- filter (/= '\n') <$> readProcess "docker" [ "run"
   --                                                        , "--rm"
   --                                                        , "--volumes-from=" ++ cid
