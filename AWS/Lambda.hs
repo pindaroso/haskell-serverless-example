@@ -1,6 +1,5 @@
 {-# LANGUAGE OverloadedStrings #-}
-
-module Aws.Lambda where
+module AWS.Lambda where
 
 import           Control.Lens
 import           Control.Monad.Catch
@@ -20,10 +19,7 @@ defaultRole = "arn:aws:iam::259394719635:role/lambda"
 defaultHandler :: Text
 defaultHandler = "run.handle"
 
-createFunctionWithZip :: ( MonadResource m
-                         , MonadCatch m
-                         ) => Text -> FilePath -> AWST m FunctionConfiguration
+createFunctionWithZip :: (MonadResource m, MonadCatch m) => Text -> FilePath -> AWST m FunctionConfiguration
 createFunctionWithZip fName zipFile = do
   code <- liftIO $ LBS.readFile zipFile
-  send (createFunction
-        fName NODEJS4_3 defaultRole defaultHandler (set fcZipFile (Just $ LBS.toStrict code) functionCode))
+  send (createFunction fName NODEJS4_3 defaultRole defaultHandler (set fcZipFile (Just $ LBS.toStrict code) functionCode))

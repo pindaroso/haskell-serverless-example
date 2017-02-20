@@ -1,4 +1,7 @@
+*~
+*.o
+*.hi
+.stack-work/
+\#*
 .vagrant
-tags
-.DS_Store
-src/app/src/.stack-work
+.cidfile

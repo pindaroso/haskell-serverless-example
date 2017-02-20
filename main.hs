@@ -1,10 +1,9 @@
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE RecordWildCards  #-}
-
 module Main where
 
-import           Aws.ApiGateway
-import           Aws.Lambda
+import           AWS.ApiGateway
+import           AWS.Lambda
 import           Control.Lens
 import           Control.Monad           (forM)
 import           Control.Monad.Trans.AWS
@@ -20,19 +19,21 @@ import           System.IO
 import           System.IO.Extra
 import           System.Process
 
+
 main :: IO ()
 main = options >>= go
 
 initAWS :: IO Env
 initAWS = do
   lgr <- newLogger Trace stdout
-  newEnv Ireland Discover <&> envLogger .~ lgr
+  awsEnv <- newEnv Ireland Discover <&> envLogger .~ lgr
+  return awsEnv
 
 go :: MainConfig -> IO ()
-go CreateApi{..} = initAWS >>= \ awsEnv -> runResourceT
-       (runAWST awsEnv $ createApi createApiEndpoint lambdaTargetName) >>= print
+go CreateApi{..} = initAWS >>= \ awsEnv -> runResourceT (runAWST awsEnv $ createApi createApiEndpoint lambdaTargetName) >>= print
 go DeleteApi{..} = initAWS >>= \ awsEnv -> runResourceT (runAWST awsEnv $ deleteApi deleteApiEndpoint)
 go BuildLambda{..} = do
+  -- build docker container
   buildDocker
   -- build executable with docker
   exe <- stackInDocker (ImageName "ghc-centos:lapack") (unpack lambdaSrcDirectory) (unpack lambdaTargetName)
@@ -42,11 +43,7 @@ go BuildLambda{..} = do
   packLambda exe (exe:libs)
     where
       buildDocker :: IO ()
-      buildDocker = callProcess "docker" [ "build"
-                                         , "-t"
-                                         , "ghc-centos:lapack"
-                                         , "/home/vagrant/code/app"
-                                         ]
+      buildDocker = callProcess "docker" ["build", "-t", "ghc-centos:lapack","ghc-centos" ]
 
       packLambda :: FilePath -> [FilePath] -> IO ()
       packLambda exe files = do
@@ -58,8 +55,7 @@ go DeployLambda{..} = do
   awsEnv <- initAWS
   createOrUpdateFunction awsEnv lambdaTargetName "lambda.zip" >>= print
     where
-      createOrUpdateFunction awsEnv target zipFile =
-          runResourceT (runAWST awsEnv $ createFunctionWithZip target zipFile)
+      createOrUpdateFunction awsEnv target zipFile = runResourceT (runAWST awsEnv $ createFunctionWithZip target zipFile)
 
 setMainTo :: FilePath -> String -> String
 setMainTo _   []                             = []
@@ -70,37 +66,13 @@ setMainTo exe s |  "$$main$$" `isPrefixOf` s = exe ++ setMainTo exe (drop 8 s)
 extractLibs :: ImageName -> String -> IO [ FilePath ]
 extractLibs (ImageName imgName) targetName = do
   cid <- readFile ".cidfile"
-  let stackRoot = "/home/vagrant/code/app/src"
-  -- stackRoot <- filter (/= '\n') <$> readProcess "docker" [ "run"
-  --                                                        , "--rm"
-  --                                                        , "--volumes-from=" ++ cid
-  --                                                        , "-w"
-  --                                                        , "/build"
-  --                                                        , imgName
-  --                                                        , "stack"
-  --                                                        , "path"
-  --                                                        , "--allow-different-user"
-  --                                                        , "--local-install-root"
-  --                                                        ] ""
-  libs <- getUnknownLibs <$> readProcess "docker" [ "run"
-                                                  , "--rm"
-                                                  , "--volumes-from=" ++ cid
-                                                  , imgName
-                                                  , "ldd"
-                                                  , stackRoot ++ "/bin/" ++ targetName
-                                                  ] ""
+  stackRoot <- filter (/= '\n') <$> readProcess "docker" [ "run", "--rm", "--volumes-from=" ++ cid,  "-w", "/build", imgName, "stack", "path",  "--allow-different-user", "--local-install-root" ] ""
+  libs          <- getUnknownLibs <$> readProcess "docker" ["run", "--rm", "--volumes-from=" ++ cid, imgName, "ldd", stackRoot ++ "/bin/" ++ targetName ] ""
   forM libs (extractLib cid)
     where
       extractLib cid lib = do
         let targetLib = takeFileName lib
-        (_, Just hout, _, phdl) <- createProcess $ (proc "docker" [ "run"
-                                                                  , "--rm"
-                                                                  , "--volumes-from=" ++ cid
-                                                                  , imgName
-                                                                  , "sh"
-                                                                  , "-c"
-                                                                  , "dd if=$(readlink -f " ++ lib ++ ")"
-                                                                  ]) { std_out = CreatePipe }
+        (_, Just hout, _, phdl) <- createProcess $ (proc "docker" ["run", "--rm", "--volumes-from=" ++ cid, imgName, "sh", "-c", "dd if=$(readlink -f " ++ lib ++ ")" ]) { std_out = CreatePipe }
         withBinaryFile targetLib WriteMode $ \ hDst -> copy hout hDst
         void $ waitForProcess phdl
         return targetLib
@@ -109,14 +81,12 @@ extractLibs (ImageName imgName) targetName = do
 -- | Extract list of non-standard libs to be packaged with executable
 --
 -- expect input string to be the result of executing `ldd` on some executable
-getUnknownLibs :: String -> [ FilePath
-                            ]
+getUnknownLibs :: String -> [ FilePath ]
 getUnknownLibs lddOutput = let mappings = map words $ lines lddOutput
                            in map (!! 2) $ filter (not . (`elem` standardLibs) . head ) mappings
 
 -- | List of standard libraries packaged in CentOS image
-standardLibs :: [ String
-                ]
+standardLibs :: [ String ]
 standardLibs =  [ "linux-vdso.so.1"
                 , "librt.so.1"
                 , "libutil.so.1"
@@ -129,3 +99,6 @@ standardLibs =  [ "linux-vdso.so.1"
                 , "libc.so.6"
                 , "/lib64/ld-linux-x86-64.so.2"
                 ]
+
+
+

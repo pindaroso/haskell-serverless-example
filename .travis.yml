@@ -13,4 +13,4 @@ before_install:
   - sudo mkdir /mnt/docker
 
 script:
-  - cd src && make
+  - make

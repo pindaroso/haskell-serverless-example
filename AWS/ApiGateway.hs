@@ -1,6 +1,5 @@
 {-# LANGUAGE ScopedTypeVariables #-}
-
-module Aws.ApiGateway where
+module AWS.ApiGateway where
 
 import           Control.Lens
 import           Control.Monad                (when)

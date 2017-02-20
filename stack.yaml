@@ -1,5 +1,4 @@
 resolver: lts-6.2
-
 packages:
 - '.'
 - location:

@@ -15,6 +15,7 @@ curl -o /usr/local/bin/docker-compose -L \
     "https://github.com/docker/compose/releases/download/1.9.0/docker-compose-$(uname -s)-$(uname -m)"
 chmod +x /usr/local/bin/docker-compose
 chown -R vagrant /usr/local/bin/docker-compose
+curl -sSL https://get.haskellstack.org/ | sh
 exit 0
 SCRIPT
 
@@ -23,7 +24,7 @@ Vagrant.configure(2) do |config|
     config.vm.hostname = "haskell-serverless-example.vagrant"
     config.vm.network "private_network", ip: "192.168.50.79"
     config.vm.provision "shell", inline: $script
-    config.vm.synced_folder "./src", "/home/vagrant/code", type: 'nfs'
+    config.vm.synced_folder ".", "/home/vagrant/code", type: 'nfs'
     config.vm.provider :virtualbox do |vb|
         vb.customize ["modifyvm", :id, "--usb", "off"]
         vb.customize ["modifyvm", :id, "--usbehci", "off"]

@@ -1,0 +1,4 @@
+#!/bin/bash
+
+main=/home/vagrant/code/.stack-work/install/x86_64-linux/lts-6.2/7.10.3/bin/main
+$main lambda deploy --function-name foo

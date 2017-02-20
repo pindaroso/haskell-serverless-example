@@ -1,2 +1,0 @@
-#!/bin/bash
-vagrant ssh -c "cd code && ls && make"
