@@ -73,7 +73,7 @@ Note that AWS has a rate limit on API deletions.
 ## Simple Build ##
 
 * Build docker container for building Haskell code that is supposed to be runnable on Amazon's Linux AMI
-    
+
     ```
     cd ghc-centos
     docker build -t haskell-centos .
@@ -90,7 +90,7 @@ Note that AWS has a rate limit on API deletions.
     ```
 
 * Build zip file containing Javascript wrapper and main app
-  
+
   ```
   zip lambda.zip run.js main
   ```
@@ -116,7 +116,7 @@ A lot of interesting pieces of code rely on external C libraries. For example, [
      done
    ```
 * Modify the `run.js` wrapper to set correctly `LD_LIBRARY_PATH` environment:
-     
+
    ```
    process.env['LD_LIBRARY_PATH'] = process.env['LAMBDA_TASK_ROOT']
    ctx = context
@@ -130,17 +130,17 @@ A lot of interesting pieces of code rely on external C libraries. For example, [
     ```
     $ aws lambda create-function --function-name hello-test --runtime nodejs4.3 --zip-file fileb://./aws-lambda.zip  --handler run.handle --role arn:aws:iam::259394719635:role/lambda
     {
-        "CodeSha256": "QYKOebaDN/fqEzb1nmaV3ByNDZK3JvD0kWX6YQnPpjE=", 
-        "FunctionName": "hello-test", 
-        "CodeSize": 265356, 
-        "MemorySize": 128, 
-        "FunctionArn": "arn:aws:lambda:eu-west-1:259394719635:function:hello-test", 
-        "Version": "$LATEST", 
-        "Role": "arn:aws:iam::259394719635:role/lambda", 
-        "Timeout": 20, 
-        "LastModified": "2016-05-23T10:32:38.126+0000", 
-        "Handler": "run.handle", 
-        "Runtime": "nodejs4.3", 
+        "CodeSha256": "QYKOebaDN/fqEzb1nmaV3ByNDZK3JvD0kWX6YQnPpjE=",
+        "FunctionName": "hello-test",
+        "CodeSize": 265356,
+        "MemorySize": 128,
+        "FunctionArn": "arn:aws:lambda:eu-west-1:259394719635:function:hello-test",
+        "Version": "$LATEST",
+        "Role": "arn:aws:iam::259394719635:role/lambda",
+        "Timeout": 20,
+        "LastModified": "2016-05-23T10:32:38.126+0000",
+        "Handler": "run.handle",
+        "Runtime": "nodejs4.3",
         "Description": ""
     }
     ```
@@ -159,7 +159,7 @@ A lot of interesting pieces of code rely on external C libraries. For example, [
 The provided `main.hs` simply output its input to its output. There should be an execution trace in the logs hosted on CloudWatch:
 
 ![](cloudwatch.png)
-    
+
 ## Manifest
 
 * `ghc-centos`: Docker container for building Haskell binaries compatible with [Amazon's Linux AMI](http://docs.aws.amazon.com/lambda/latest/dg/current-supported-versions.html). Does not seem to be a good idea in general as there are quite a few differences between CentOS and Linux AMI, but in practice it kind works...
