@@ -2,50 +2,33 @@
 
 # haskell-serverless-example
 
-This repository contains code and directions to run Haskell executables over [AWS Lambda]() "serverless" infrastructure. This experiment was triggered by reading description of [apex](http://apex.run) provide a wrapper to run Go code.
+**Haskell serverless example using AWS API Gateway and Lambda**
 
-## Howto - Automated Way
+## Setup
 
-The `main.hs` aims at automating the deployment of Haskell code packages to AWS Lambda:
+### Installation
+
+* Ensure access to AWS Lambda service:
+    * use `aws configure` to define credentials and region to deploy to
+    * create or use role for executing code on AWS Lambda, e.g. something like `arn:aws:iam::259394719635:role/lambda`
+
+`main.hs` aims to automate the deployment of Haskell code packages to AWS Lambda:
+
+### Building
 
 * Manaing AWS Lambda functions and packages,
 * Manage AWS Api Gateway endpoints to expose Lambda functions.
 
-Interaction with AWS is done through the excellent [amazonka](https://github.com/brendanhay/amazonka) package.
-
-To build CLI program:
+Interaction with AWS is done through the excellent [amazonka](https://github.com/brendanhay/amazonka) package. To build CLI program:
 
 ```
-$ stack build
+$ ./bin/setup
 ```
 
-Creating an AWS Lambda package (requires [docker](http://docker.io)):
+This generates a `lambda.zip` file in the current directory. Deploying an existing `lambda.zip` file to AWS:
 
 ```
-$ ./main lambda build --build-target foo --source-directory foo/
-```
-
-This generates a `lambda.zip` file in the current directory that contains something like:
-
-```
-$ unzip -l lambda.zip
-Archive:  lambda.zip
-  Length     Date   Time    Name
- --------    ----   ----    ----
-     1131  06-07-16 10:38   run.js
- 32648176  06-07-16 10:38   words
-   364776  06-07-16 10:38   libblas.so.3
-  5638304  06-07-16 10:38   liblapack.so.3
-  1186104  06-07-16 10:38   libgfortran.so.3
-   244904  06-07-16 10:38   libquadmath.so.0
- --------                   -------
- 40083395                   6 files
-```
-
-Deploying an existing `lambda.zip` file to AWS:
-
-```
-$ ./main lambda deploy --function-name foo
+$ ./bin/deploy
 ```
 
 This creates function `foo` that can be invoked manually (see below).
@@ -53,47 +36,14 @@ This creates function `foo` that can be invoked manually (see below).
 Deleting an API Gateway endpoint:
 
 ```
-$ ./main api delete --endpoint fooAPI
+$ ./bin/delete
 ```
 
 Note that AWS has a rate limit on API deletions.
 
 ### TODO
 
-* Creating an API Gateway endpoint and linking it to Lambda function: The configuration and part of the code are ready but the process is a little bit involved hence requires more interaction with AWS
-
-## Howto - The Manual Way
-
-### Prepare environment
-
-* Ensure access to AWS Lambda service:
-    * use `aws configure` to define credentials and region to deploy to
-    * create or use role for executing code on AWS Lambda, e.g. something like `arn:aws:iam::259394719635:role/lambda`
-
-## Simple Build ##
-
-* Build docker container for building Haskell code that is supposed to be runnable on Amazon's Linux AMI
-
-    ```
-    cd ghc-centos
-    docker build -t haskell-centos .
-    cd ..
-    ```
-
-* Build haskell code:
-
-    ```
-    docker run -ti -v $(pwd):/build -w /build --name=haskell-build haskell-centos stack build --allow-different-user
-    ...
-    CONTAINER_ID=$(docker ps -a | grep haskell-centos | head -1 | cut -d ' ' -f 1)
-    docker run --volumes-from=$CONTAINER_ID busybox dd if=/build/.stack-work/install/x86_64-linux/ghc-7.10.3/7.10.3/bin/main > main
-    ```
-
-* Build zip file containing Javascript wrapper and main app
-
-  ```
-  zip lambda.zip run.js main
-  ```
+* Create an API Gateway endpoint and link it to the AWS Lambda function. The configuration and part of the code are ready but the process is a little bit involved.
 
 ## Complex Build
 
@@ -160,15 +110,9 @@ The provided `main.hs` simply output its input to its output. There should be an
 
 ![](cloudwatch.png)
 
-## Manifest
-
-* `ghc-centos`: Docker container for building Haskell binaries compatible with [Amazon's Linux AMI](http://docs.aws.amazon.com/lambda/latest/dg/current-supported-versions.html). Does not seem to be a good idea in general as there are quite a few differences between CentOS and Linux AMI, but in practice it kind works...
-* `run-tmpl.js`: Template Javascript wrapper to run binary in a child process. The `$$main$$` string should be replaced by the name of the packed executable,
-* `test.js`: Javascript test wrapper, invoke the handler simulating what AWS Lambda does
-* `stack.yaml`, `main.cabal`, `main.hs`: Basic structure for building Haskell code
-
 ## References
 
+* [Inspiration](https://github.com/abailly/aws-lambda-haskell)
 * [Running executables in AWS Lambda](http://aws.amazon.com/fr/blogs/compute/running-executables-in-aws-lambda/)
 * [Child processes in node](https://nodejs.org/api/child_process.html)
 * [AWS Lambda documentation](http://docs.aws.amazon.com/lambda/latest/dg/nodejs-create-deployment-pkg.html)
