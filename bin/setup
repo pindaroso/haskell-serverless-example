@@ -1,14 +1,16 @@
 #!/bin/bash
 
+vagrant up
+vagrant ssh
+
 source vars.env
 
 sudo apt-get install -y zip python-pip
 
 pip install --upgrade --user awscli
 
+aws configure # Enter AWS credential as prompt instructs
+
 echo "export PATH=$PATH:~/.local/bin" >> ~/.bashrc
 
 stack setup --allow-different-user
-stack build --allow-different-user
-
-$main lambda build --build-target main --source-directory example-src/

@@ -14,12 +14,17 @@
 
 ### Building
 
+To setup the application, follow the below instructions.
+
 ```
-$ vagrant up
-$ vagrant ssh
 $ cp vars.example.env vars.env && vim vars.env # Update variables as needed
 $ ./bin/setup
-$ aws configure # Enter AWS credential as prompt instructs
+```
+
+Building the application code is also simple.
+
+```
+$ ./bin/build
 ```
 
 This builds your entire project and generates a `lambda.zip` file in the current directory. Deploying an existing `lambda.zip` file to AWS is done by executing the following command:

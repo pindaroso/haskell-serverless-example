@@ -1,0 +1,10 @@
+#!/bin/bash
+
+vagrant up
+vagrant ssh
+
+source vars.env
+
+stack build --allow-different-user
+
+$main lambda build --build-target main --source-directory example-src/
