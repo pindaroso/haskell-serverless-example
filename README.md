@@ -21,7 +21,7 @@ $ ./bin/setup
 $ aws configure # Follow prompt instructions
 ```
 
-This generates a `lambda.zip` file in the current directory. Deploying an existing `lambda.zip` file to AWS:
+This builds your entire project and generates a `lambda.zip` file in the current directory. Deploying an existing `lambda.zip` file to AWS is done by executing the following command:
 
 ```
 $ ./bin/deploy
