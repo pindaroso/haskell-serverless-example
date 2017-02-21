@@ -9,7 +9,8 @@
 ### Requirements
 
 * Vagrant or Docker (Engine and Compose)
-* An AWS role for executing code on AWS Lambda, e.g., `arn:aws:iam::259394719635:role/lambda`
+* AWS role for executing code on AWS Lambda, e.g., `arn:aws:iam::259394719635:role/lambda`
+* AWS API key and secret
 
 ### Building
 
