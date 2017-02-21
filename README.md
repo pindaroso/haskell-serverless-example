@@ -13,9 +13,6 @@
 
 ### Building
 
-
-`main.hs` aims to automate the deployment of Haskell code packages to AWS Lambda:
-
 ```
 $ vagrant up
 $ vagrant ssh
