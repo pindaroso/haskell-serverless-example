@@ -17,8 +17,8 @@
 ```
 $ vagrant up
 $ vagrant ssh
-$ aws configure # Follow prompt instructions
 $ ./bin/setup
+$ aws configure # Follow prompt instructions
 ```
 
 This generates a `lambda.zip` file in the current directory. Deploying an existing `lambda.zip` file to AWS:
