@@ -1,4 +1,6 @@
 version: "2"
 
 services:
-    build: "./ghc-centos"
+    app:
+        build: ./ghc-centos
+        command: tail -f /dev/null

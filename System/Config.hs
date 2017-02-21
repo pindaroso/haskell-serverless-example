@@ -79,4 +79,3 @@ options = execParser opts
       ( fullDesc
         <> progDesc "Manage AWS Lambda functions"
         <> header "Haskell + Lambda" )
-
