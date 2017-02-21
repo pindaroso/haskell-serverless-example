@@ -1,5 +1,6 @@
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE RecordWildCards  #-}
+
 module Main where
 
 import           AWS.ApiGateway
@@ -26,8 +27,7 @@ main = options >>= go
 initAWS :: IO Env
 initAWS = do
   lgr <- newLogger Trace stdout
-  awsEnv <- newEnv Ireland Discover <&> envLogger .~ lgr
-  return awsEnv
+  newEnv Ireland Discover <&> envLogger .~ lgr
 
 go :: MainConfig -> IO ()
 go CreateApi{..} = initAWS >>= \ awsEnv -> runResourceT (runAWST awsEnv $ createApi createApiEndpoint lambdaTargetName) >>= print

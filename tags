@@ -6,8 +6,8 @@ CreateApi	System/Config.hs	7;"	C
 DeleteApi	System/Config.hs	6;"	C
 DeployLambda	System/Config.hs	13;"	C
 Lambda	AWS/Lambda.hs	3;"	m
-Main	main.hs	3;"	m
 Main	example-src/main.hs	1;"	m
+Main	main.hs	4;"	m
 MainConfig	System/Config.hs	6;"	t
 apiConfig	System/Config.hs	24;"	f
 buildLambdaConfig	System/Config.hs	56;"	f
@@ -24,14 +24,14 @@ deployLambdaConfig	System/Config.hs	68;"	f
 extractLibs	main.hs	66;"	f
 getUnknownLibs	main.hs	84;"	f
 go	main.hs	32;"	f
-initAWS	main.hs	26;"	f
+initAWS	main.hs	27;"	f
 lambdaConfig	System/Config.hs	48;"	f
 lambdaSrcDirectory	System/Config.hs	11;"	f
 lambdaTargetName	System/Config.hs	8;"	f
 lambdaTargetName	System/Config.hs	10;"	f
 lambdaTargetName	System/Config.hs	13;"	f
-main	main.hs	23;"	f
 main	example-src/main.hs	5;"	f
+main	main.hs	24;"	f
 mainConfig	System/Config.hs	16;"	f
 options	System/Config.hs	75;"	f
 setMainTo	main.hs	60;"	f
