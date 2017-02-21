@@ -17,8 +17,9 @@
 ```
 $ vagrant up
 $ vagrant ssh
+$ cp vars.example.env vars.env && vim vars.env # Update variables as needed
 $ ./bin/setup
-$ aws configure # Follow prompt instructions
+$ aws configure # Enter AWS credential as prompt instructs
 ```
 
 This builds your entire project and generates a `lambda.zip` file in the current directory. Deploying an existing `lambda.zip` file to AWS is done by executing the following command:
@@ -27,7 +28,7 @@ This builds your entire project and generates a `lambda.zip` file in the current
 $ ./bin/deploy
 ```
 
-This creates function `foo` that can be invoked manually (see below).
+This creates function `x` that can be invoked manually (see below).
 
 Deleting an API Gateway endpoint:
 
