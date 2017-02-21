@@ -8,20 +8,20 @@
 
 ### Installation
 
-* Ensure access to AWS Lambda service:
-    * use `aws configure` to define credentials and region to deploy to
-    * create or use role for executing code on AWS Lambda, e.g. something like `arn:aws:iam::259394719635:role/lambda`
+*Requirements*
 
-`main.hs` aims to automate the deployment of Haskell code packages to AWS Lambda:
+* Vagrant or Docker (Engine and Compose)
+* An AWS role for executing code on AWS Lambda, e.g., `arn:aws:iam::259394719635:role/lambda`
 
 ### Building
 
-* Manaing AWS Lambda functions and packages,
-* Manage AWS Api Gateway endpoints to expose Lambda functions.
 
-Interaction with AWS is done through the excellent [amazonka](https://github.com/brendanhay/amazonka) package. To build CLI program:
+`main.hs` aims to automate the deployment of Haskell code packages to AWS Lambda:
 
 ```
+$ vagrant up
+$ vagrant ssh
+$ aws configure # Follow prompt instructions
 $ ./bin/setup
 ```
 
